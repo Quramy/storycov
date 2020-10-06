@@ -1,6 +1,6 @@
 {
   "name": "storycov",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "collect coverage your storybook",
   "bin": {
     "storycov": "lib/index.js"
@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
-    "postinstall": "patch -p0 < puppeteer.patch"
+    "postinstall": "node postinstall.js"
   },
   "repository": {
     "type": "git",
@@ -28,9 +28,11 @@
     "@types/mkdirp": "^1.0.1",
     "@types/node-fetch": "^2.5.7",
     "convert-source-map": "^1.7.0",
+    "diff": "^4.0.2",
     "istanbul-lib-coverage": "^3.0.0",
     "istanbul-lib-report": "^3.0.0",
     "istanbul-reports": "^3.0.2",
+    "jsdiff": "^1.1.1",
     "mkdirp": "^1.0.4",
     "node-fetch": "^2.6.1",
     "storycrawler": "^3.0.1",
