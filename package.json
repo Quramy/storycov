@@ -1,0 +1,46 @@
+{
+  "name": "storycov",
+  "version": "1.0.0-alpha.0",
+  "description": "collect coverage your storybook",
+  "bin": {
+    "storycov": "lib/index.js"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "postinstall": "patch -p0 < puppeteer.patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quramy/storycov.git"
+  },
+  "keywords": [],
+  "author": "Quramy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Quramy/storycov/issues"
+  },
+  "homepage": "https://github.com/Quramy/storycov#readme",
+  "dependencies": {
+    "@types/convert-source-map": "^1.5.1",
+    "@types/istanbul-lib-coverage": "^2.0.3",
+    "@types/istanbul-lib-report": "^3.0.0",
+    "@types/mkdirp": "^1.0.1",
+    "@types/node-fetch": "^2.5.7",
+    "convert-source-map": "^1.7.0",
+    "istanbul-lib-coverage": "^3.0.0",
+    "istanbul-lib-report": "^3.0.0",
+    "istanbul-reports": "^3.0.2",
+    "mkdirp": "^1.0.4",
+    "node-fetch": "^2.6.1",
+    "storycrawler": "^3.0.1",
+    "v8-to-istanbul": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/puppeteer-core": "^2.0.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.2",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  }
+}
