@@ -3,7 +3,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
-import type { CoverageEntry } from 'puppeteer-core';
+import type { Page, CoverageEntry } from 'puppeteer-core';
 import v8toIstanbul from 'v8-to-istanbul';
 import { fromSource, mapFileCommentRegex } from 'convert-source-map';
 import fetch from 'node-fetch';
@@ -19,7 +19,10 @@ import {
   createExecutionService,
 } from 'storycrawler';
 
+import { Coverage } from './Coverage';
+
 const SCHEMA_REGEXP = /^([a-zA-Z][a-zA-Z\-\+\.\d]*):\/\//;
+const pagesCoverage = new WeakMap<Page, Coverage>();
 
 async function report(coverageMap: libCov.CoverageMap) {
   const configWatermarks: Record<string, [number, number]> = {
@@ -111,6 +114,7 @@ async function convertIstanbulWithMap(results: (CoverageEntry & { rawScriptCover
       (acc, d) =>
         d.path.startsWith('/node_modules') ||
         d.path.startsWith('/webpack') ||
+        d.path.indexOf(')(') !== -1 ||
         d.path.indexOf('(webpack)') !== -1 ||
         d.path.indexOf('.stories') !== -1 ||
         d.path.indexOf('util.inspect') !== -1 ||
@@ -147,7 +151,9 @@ async function main() {
   const workers = await Promise.all(
     [0].map(async i => {
       const worker = await new StoryPreviewBrowser(connection, i).boot();
-      worker.page.coverage.startJSCoverage({
+      const coverage = new Coverage((worker.page as any)._client);
+      pagesCoverage.set(worker.page, coverage);
+      coverage.startJSCoverage({
         includeRawScriptCoverage: true,
       } as any);
       return worker;
@@ -175,7 +181,7 @@ async function main() {
     await storiesBrowser.close();
     const coverages = await Promise.all(
       workers.map(async worker => {
-        const cov = await worker.page.coverage.stopJSCoverage();
+        const cov = await pagesCoverage.get(worker.page)!.stopJSCoverage();
         await worker.close();
         return cov;
       }),
