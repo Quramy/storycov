@@ -9,7 +9,6 @@ const targetPath = path.join(
   __dirname,
   'node_modules/storycrawler/node_modules/puppeteer-core/lib/cjs/puppeteer/common/Coverage.js',
 );
-const targetPath2 = path.join(__dirname, 'node_modules/puppeteer-core/lib/cjs/puppeteer/common/Coverage.js');
 
 let orig;
 let p;
@@ -17,8 +16,9 @@ try {
   orig = fs.readFileSync(targetPath, 'utf-8');
   p = targetPath;
 } catch {
-  orig = fs.readFileSync(targetPath2, 'utf-8');
-  p = targetPath2;
+  const pcorebase = require.resolve('puppeteer-core');
+  p = path.resolve(path.dirname(pcorebase), './lib/cjs/puppeteer/common/Coverage.js');
+  orig = fs.readFileSync(p, 'utf-8');
 }
 if (orig) {
   const patched = Diff.applyPatch(orig, patch);
